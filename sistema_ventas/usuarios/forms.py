@@ -2,6 +2,11 @@ from django import forms
 from .models import Usuarios
 from django.contrib.auth.models import User #Usamos el modelo de user para evitar hacer encriptacion de contra
 
+#importaciones para requisitos para una contraseña segura
+from django.contrib.auth.password_validation import validate_password #comprueba si una contraseña cumple las reglas de seguridad configuradas en Django.
+from django.core.exceptions import ValidationError #Representa un error de validación que podemos capturar y mostrar al usuario.
+
+
 class FormularioRegistroUsuario(forms.Form):
     
     #campos del regsitro
@@ -46,7 +51,7 @@ class FormularioRegistroUsuario(forms.Form):
     password = forms.CharField(
         min_length=8,
         required=True,
-        widget=forms.TextInput(attrs={
+        widget=forms.PasswordInput(attrs={ #ponemos PasswordInput para que aparesca la contraseña asi **********
             'class':'input',
             'id':'reg-password'
         })
@@ -55,7 +60,7 @@ class FormularioRegistroUsuario(forms.Form):
     password2 = forms.CharField(
         min_length=8,
         required=True,
-        widget=forms.TextInput(attrs={
+        widget=forms.PasswordInput(attrs={
             'class':'input',
             'id':'reg-password2'
         })
@@ -102,6 +107,31 @@ class FormularioRegistroUsuario(forms.Form):
         return telefono_ingresado
     
     
+    #Las 2 contraseñas coincidan en el registro(NO USAMOS def clean_password PORQUE ESTO ES VALIDACIONES INDIVIDUALES PARA CADA CAMPO)
+    def clean(self):
+        cleaned_data = super().clean()
+
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        # Verificamos que las contraseñas coincidan
+        if password and password2 and password != password2:
+            self.add_error(
+                'password2',
+                'La confirmación de contraseña no coincide'
+            )
+
+        #Para que la contraseña cumpla con requisitos de seguridad
+        if password:
+            try:
+                validate_password(password)
+                
+            except ValidationError as error: #Aqui los mensajes de errores ya viene integrados con ValidationError
+                self.add_error(field='password', error=error)
+            
+        return cleaned_data
+                    
+    
 
 # Formulario para inicio sesion 
 class FormularioInicioSesion(forms.Form):
@@ -116,7 +146,7 @@ class FormularioInicioSesion(forms.Form):
     
     password = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={
+        widget=forms.PasswordInput(attrs={
             'class' : 'input',
             'id' : 'login-password'
         })

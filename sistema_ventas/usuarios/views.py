@@ -4,6 +4,7 @@ from django.contrib.auth.models import User #importamos para guardar los datos a
 from .forms import FormularioRegistroUsuario, FormularioInicioSesion
 from .models import Usuarios # importamos para guardar los datos a la tabla de usuarios
 from django.contrib.auth import authenticate, login, logout #Importamos las acciones para hacer la ATHENTICATE de la  contraseña hacer LOGIN Y LOGOUT
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 # (REQUEST : NOS PERMITE HACER PETICIONES A INTERNED OSEA AL NAVEGADOR)
@@ -21,14 +22,7 @@ def registroUsuario(request):
             apellido = formulario.cleaned_data.get('apellido')
             correo = formulario.cleaned_data.get('correo')
             password = formulario.cleaned_data.get('password')
-                
-            #verficamos que la password sea igual a la confirmacion de password_confirm
-            if password != formulario.cleaned_data.get('password2'):
-                messages.error(request, 'La contraseña no coinciden')
-                    
-                return render(request, 'cuentas/registro.html', { #renderizamos el mismo html de registro.
-                    'formulario' : formulario # Le devolvemos el formulario con sus datos para que los corriga
-                })             
+                     
                     
             #Introducimos los datos a la tabla de AUTH_USER
             try:
@@ -126,3 +120,13 @@ def inicioSesion(request):
     return render(request, 'cuentas/login.html', {
         'formularioI' : formulario
     })
+    
+    
+
+@require_POST #permite que esta vista se ejecute únicamente mediante una petición POST.
+def cerrarSesion(request):
+    
+    logout(request)
+    messages.success(request, "Has cerrado sesion !Hasta la proxima!😉")
+    
+    redirect('login')
