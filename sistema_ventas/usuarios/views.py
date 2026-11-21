@@ -129,4 +129,4 @@ def cerrarSesion(request):
     logout(request)
     messages.success(request, "Has cerrado sesion !Hasta la proxima!😉")
     
-    redirect('login')
+    return redirect('login')
