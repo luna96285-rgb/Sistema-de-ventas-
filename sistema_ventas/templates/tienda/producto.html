@@ -1,0 +1,89 @@
+{% extends 'tienda/base_tienda.html' %}
+
+{% block title %}Producto | Bella Studio{% endblock %}
+
+{% block content %}
+<main class="section" style="padding-top:32px;">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="#">Inicio</a> / <a href="#">Tienda</a> /
+        <a href="#?categoria=2" id="producto-categoria-link">Tratamientos</a> /
+        <span id="producto-breadcrumb">Keratina reparadora 500 ml</span>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="gallery-main" id="producto-imagen">
+            <span class="tag-discount">-20%</span>
+            Imagen del producto
+          </div>
+        </div>
+
+        <div>
+          <span class="eyebrow" id="producto-categoria">Tratamientos</span>
+          <h1 style="font-size:2.8rem;margin-top:6px;" id="producto-nombre">Keratina reparadora 500 ml</h1>
+
+          <div class="detail-price">
+            <span class="price" id="producto-precio">$ 64.000</span>
+            <span class="price-old" id="producto-precio-anterior">$ 80.000</span>
+            <span class="badge badge-vigente" id="producto-descuento">Ahorras $ 16.000</span>
+          </div>
+          <p class="hint" id="producto-iva">IVA incluido</p>
+          <p class="hint" id="producto-oferta-fin">Oferta válida hasta el 30 de noviembre</p>
+
+          <p class="mt-3" id="producto-descripcion">Tratamiento de keratina para cabello dañado o maltratado por tintes y calor. Reduce el frizz, devuelve el brillo y deja el cabello suave desde la primera aplicación.</p>
+
+          <ul class="meta-list">
+            <li><span>Disponibilidad</span><span id="producto-stock" style="color:var(--ok);">En stock (24 unidades)</span></li>
+            <li><span>Peso</span><span id="producto-peso">0.55 kg</span></li>
+            <li><span>Envío</span><span>A todo el país</span></li>
+          </ul>
+
+          <form id="form-agregar-carrito" method="post">
+{% csrf_token %}
+            <input type="hidden" name="id_productos" value="1">
+            <div class="buy-row">
+              <div class="qty">
+                <button type="button" data-accion="restar" aria-label="Menos">−</button>
+                <input type="number" name="cantidad" value="1" min="1" max="24">
+                <button type="button" data-accion="sumar" aria-label="Más">+</button>
+              </div>
+              <button type="submit" class="btn btn-primary" style="flex:1;min-width:200px;"><span class="ico ico-bag"></span> Agregar al carrito</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <section class="section" style="padding-bottom:0;">
+      <div class="container">
+        <div class="section-head"><h2>También te puede gustar</h2></div>
+        <div class="product-grid" id="productos-relacionados">
+{% for producto in relacionados %}
+{% include 'partials/_producto_card.html' %}
+{% empty %}
+{# EJEMPLO: estas tarjetas de muestra desaparecen cuando la vista envíe "relacionados". Puedes borrarlas hasta el endfor. #}
+          <article class="product-card">
+            <a href="#" class="product-img">Imagen del producto</a>
+            <div class="product-info">
+              <span class="product-cat">Tratamientos</span>
+              <a href="#" class="product-name">Aceite de argán 100 ml</a>
+              <div class="price-row"><span class="price">$ 48.000</span></div>
+              <button class="btn btn-primary btn-sm" data-id-productos="5">Agregar al carrito</button>
+            </div>
+          </article>
+          <article class="product-card">
+            <a href="#" class="product-img">Imagen del producto</a>
+            <div class="product-info">
+              <span class="product-cat">Shampoo</span>
+              <a href="#" class="product-name">Shampoo matizador violeta</a>
+              <div class="price-row"><span class="price">$ 35.000</span></div>
+              <button class="btn btn-primary btn-sm" data-id-productos="2">Agregar al carrito</button>
+            </div>
+          </article>
+        {% endfor %}
+</div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

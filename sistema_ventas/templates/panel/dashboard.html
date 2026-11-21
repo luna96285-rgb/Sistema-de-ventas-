@@ -1,0 +1,49 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block title %}Resumen | Admin Bella Studio{% endblock %}
+
+{% block panel_content %}
+    <div class="admin-top">
+      <div><span class="eyebrow">Panel de administración</span><h1>Hola, administrador</h1></div>
+    </div>
+
+    <section class="quick-actions">
+      <a href="#" class="quick quick-primary"><span class="quick-ico"><span class="ico ico-plus"></span></span><div><strong>Agregar producto</strong><small>Sube un producto nuevo</small></div></a>
+      <a href="#" class="quick"><span class="quick-ico"><span class="ico ico-tag"></span></span><div><strong>Crear descuento</strong><small>Pon un producto en oferta</small></div></a>
+      <a href="#" class="quick"><span class="quick-ico"><span class="ico ico-truck"></span></span><div><strong>Despachar pedidos</strong><small>Asigna guía y transportadora</small></div></a>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><small>Ventas del mes</small><strong id="stat-ventas">$ 4.820.000</strong><span>+12% vs mes anterior</span></div>
+      <div class="stat"><small>Pedidos nuevos</small><strong id="stat-pendientes">8</strong><span style="color:var(--warn);">Por confirmar pago</span></div>
+      <div class="stat"><small>Por despachar</small><strong id="stat-por-enviar">5</strong><span style="color:var(--info);">Pagados sin guía</span></div>
+      <div class="stat"><small>Stock bajo</small><strong id="stat-stock-bajo">3</strong><span style="color:var(--danger);">Por reponer</span></div>
+    </section>
+
+    <div class="admin-grid-2">
+      <section class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 class="card-title" style="margin:0;">Pedidos por atender</h3>
+          <a href="#" class="btn btn-ghost btn-sm">Ver todos →</a>
+        </div>
+        <ul class="list-simple" id="lista-pedidos-pendientes">
+          <li><div><strong>#1050</strong> · María Pérez<br><small class="muted">Bucaramanga · $ 35.000</small></div><span class="badge badge-pendiente">Pendiente</span></li>
+          <li><div><strong>#1049</strong> · Laura Gómez<br><small class="muted">Bogotá · $ 148.500</small></div><span class="badge badge-pagado">Pagado</span></li>
+          <li><div><strong>#1048</strong> · Sofía Ramírez<br><small class="muted">Cali · $ 92.000</small></div><span class="badge badge-pagado">Pagado</span></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h3 class="card-title" style="margin:0;">Stock bajo</h3>
+          <a href="#" class="btn btn-ghost btn-sm">Ver productos →</a>
+        </div>
+        <ul class="list-simple" id="lista-stock-bajo">
+          <li><div class="cell-product"><div class="table-thumb"></div>Tinte permanente castaño 5.0</div><strong style="color:var(--danger);">3 unid.</strong></li>
+          <li><div class="cell-product"><div class="table-thumb"></div>Secador iónico 2200 W</div><strong style="color:var(--danger);">0 unid.</strong></li>
+          <li><div class="cell-product"><div class="table-thumb"></div>Esmalte semipermanente rosa</div><strong style="color:var(--warn);">5 unid.</strong></li>
+        </ul>
+      </section>
+    </div>
+  
+{% endblock %}

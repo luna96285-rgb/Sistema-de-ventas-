@@ -1,0 +1,78 @@
+{% extends 'cuentas/base_auth.html' %}
+{% load static %}
+
+{% block title %}Crear cuenta | Bella Studio{% endblock %}
+
+{% block auth_visual %}
+    <section class="auth-visual" style="background:linear-gradient(150deg,#2a2224 0%,#5a3d45 55%,var(--rose) 100%);">
+      <span class="eyebrow" style="color:#fff;opacity:.85;">Únete a Bella Studio</span>
+      <h2>Crea tu cuenta en un minuto</h2>
+      <p>Guarda tus direcciones, sigue tus envíos y recibe tus facturas siempre a la mano.</p>
+    </section>
+{% endblock %}
+
+{% block auth_panel %}
+    <section class="auth-panel">
+      <div class="auth-box">
+
+        {% include "partials/mensajes.html" %}
+
+        <span class="eyebrow">Nueva por aquí</span>
+        <h1>Crear cuenta</h1>
+        <p class="muted" style="margin-bottom:26px;">Solo necesitamos unos datos para empezar.</p>
+
+        {# usuarios: nombre, apellido, correo, telefono, password. El rol se asigna como "cliente" en el backend #}
+        <form id="form-registro" method="POST">
+{% csrf_token %}
+          <div class="form-row">
+            <div class="field">
+              <label for="reg-nombre">Nombre</label>
+              {{formulario.nombre}}
+            </div>
+            <div class="field">
+              <label for="reg-apellido">Apellido</label>
+              {{formulario.apellido}}
+            </div>
+          </div>
+          <div class="field">
+            <label for="reg-correo">Correo</label>
+            {{formulario.correo}}
+          </div>
+          <div class="field">
+            <label for="reg-telefono">Teléfono</label>
+            {{formulario.telefono}}
+          </div>
+
+          <div class="field">
+            <label for="reg-password">Contraseña</label>
+            <div class="password-wrap">
+              {{formulario.password}}
+              <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                <span class="ico ico-eye"></span>
+              </button>
+            </div>
+            <span class="hint">Mínimo 8 caracteres</span>
+          </div>
+
+          <div class="field">
+            <label for="reg-password2">Confirmar contraseña</label>
+            <div class="password-wrap">
+              {{formulario.password2}}
+              <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                <span class="ico ico-eye"></span>
+              </button>
+            </div>
+            <span class="hint" id="registro-password-error" style="color:var(--danger);display:none;">Las contraseñas no coinciden.</span>
+          </div>
+
+          <label class="switch" style="margin-bottom:22px;"><input type="checkbox" name="acepta_terminos" required> Acepto los términos y la política de datos</label>
+          <p class="hint" id="registro-error" style="color:var(--danger);display:none;margin-bottom:12px;">Este correo ya está registrado.</p>
+          <button type="submit" class="btn btn-primary btn-block">Crear mi cuenta</button>
+        </form>
+
+        <p class="auth-alt">¿Ya tienes cuenta? <a href="{% url "login" %}">Ingresa aquí</a></p>
+      </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/registro/ojo-password.js' %}"></script>{% endblock %}

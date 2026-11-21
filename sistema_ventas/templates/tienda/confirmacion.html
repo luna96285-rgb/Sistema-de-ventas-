@@ -1,0 +1,41 @@
+{% extends 'tienda/base_minimo.html' %}
+
+{% block title %}Pedido confirmado | Bella Studio{% endblock %}
+
+{% block header_actions %}
+<a href="#" class="btn btn-ghost btn-sm">Mis pedidos</a>
+<a href="#" class="icon-btn" aria-label="Carrito"><span class="ico ico-bag"></span><span class="badge-count" id="carrito-contador">{{ carrito_contador|default:0 }}</span></a>
+{% endblock %}
+
+{% block content %}
+<main class="section" style="padding-top:40px;">
+    <div class="container">
+      <div class="steps" style="justify-content:center;">
+        <div class="step"><b>✓</b> Carrito</div>
+        <div class="step"><b>✓</b> Envío y pago</div>
+        <div class="step active"><b>3</b> Confirmación</div>
+      </div>
+
+      <section class="confirm">
+        <div class="confirm-icon"><span class="ico ico-check"></span></div>
+        <span class="eyebrow">Gracias por tu compra</span>
+        <h1 style="font-size:2.8rem;margin:6px 0 12px;">¡Pedido confirmado!</h1>
+        <p class="muted">Tu pedido <strong id="confirmacion-pedido" style="color:var(--ink);">#1051</strong> quedó registrado. Te avisaremos cuando salga con la transportadora.</p>
+
+        <div class="card mt-3" style="text-align:left;">
+          <div class="summary-row"><span class="muted">Factura</span><strong id="confirmacion-factura">FV-000124</strong></div>
+          <div class="summary-row"><span class="muted">Enviar a</span><span id="confirmacion-direccion">Cra 15 # 20-35, Bucaramanga</span></div>
+          <div class="summary-row"><span class="muted">Transportadora</span><span id="confirmacion-transportadora">Servientrega</span></div>
+          <div class="summary-row"><span class="muted">Método de pago</span><span id="confirmacion-pago">Tarjeta</span></div>
+          <div class="summary-row total"><span>Total</span><span id="confirmacion-total">$ 194.000</span></div>
+        </div>
+
+        <div class="hero-actions mt-3" style="justify-content:center;">
+          <a href="#" class="btn btn-dark">Ver mi factura</a>
+          <a href="#" class="btn btn-outline">Seguir mi pedido</a>
+          <a href="#" class="btn btn-ghost">Seguir comprando</a>
+        </div>
+      </section>
+    </div>
+  </main>
+{% endblock %}

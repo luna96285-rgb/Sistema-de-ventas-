@@ -1,0 +1,139 @@
+{% extends 'tienda/base_tienda.html' %}
+
+{% block title %}Tienda | Bella Studio{% endblock %}
+
+{% block content %}
+<main class="section" style="padding-top:32px;">
+    <div class="container">
+      <div class="breadcrumb"><a href="#">Inicio</a> / Tienda</div>
+      <div class="section-head">
+        <div><span class="eyebrow">Catálogo</span><h1 style="font-size:2.6rem;">Nuestros productos</h1></div>
+      </div>
+
+      {# Filtro horizontal: todo en una barra, se aplica al cambiar cualquier opción #}
+{% comment %}
+  FILTRO HORIZONTAL del catálogo (único). Envía los datos por GET y se aplica solo al cambiar una opción.
+  Variable opcional: "categorias" (lista con id_categorias y nombre). Si no llega, muestra categorías de ejemplo.
+  Parámetros GET: q, rango_precio, orden, id_categorias, solo_descuento, solo_disponibles
+{% endcomment %}
+<form class="filterbar" id="form-filtros" method="get" action="#" onchange="this.submit()">
+  <div class="filter-row">
+    <label class="filter-search">
+      <span class="ico ico-search"></span>
+      <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Buscar shampoo, tinte, keratina...">
+    </label>
+    <select class="select-pill" name="rango_precio" aria-label="Precio">
+      <option value="">Cualquier precio</option>
+      <option value="0-30000"{% if request.GET.rango_precio == '0-30000' %} selected{% endif %}>Hasta $ 30.000</option>
+      <option value="30000-60000"{% if request.GET.rango_precio == '30000-60000' %} selected{% endif %}>$ 30.000 – $ 60.000</option>
+      <option value="60000-100000"{% if request.GET.rango_precio == '60000-100000' %} selected{% endif %}>$ 60.000 – $ 100.000</option>
+      <option value="100000-"{% if request.GET.rango_precio == '100000-' %} selected{% endif %}>Más de $ 100.000</option>
+    </select>
+    <select class="select-pill" name="orden" aria-label="Ordenar">
+      <option value="recientes">Más recientes</option>
+      <option value="precio_asc"{% if request.GET.orden == 'precio_asc' %} selected{% endif %}>Precio: menor a mayor</option>
+      <option value="precio_desc"{% if request.GET.orden == 'precio_desc' %} selected{% endif %}>Precio: mayor a menor</option>
+      <option value="nombre"{% if request.GET.orden == 'nombre' %} selected{% endif %}>Nombre A–Z</option>
+    </select>
+    <noscript><button type="submit" class="btn btn-dark btn-sm">Filtrar</button></noscript>
+  </div>
+
+  <div class="filter-divider"></div>
+
+  <div class="filter-row">
+    <div class="chips" id="filtro-categorias">
+      <label class="chip"><input type="radio" name="id_categorias" value=""{% if not request.GET.id_categorias %} checked{% endif %}>Todas</label>
+      {% for categoria in categorias %}
+      <label class="chip"><input type="radio" name="id_categorias" value="{{ categoria.id_categorias }}"{% if request.GET.id_categorias == categoria.id_categorias|stringformat:"s" %} checked{% endif %}>{{ categoria.nombre }}</label>
+      {% empty %}
+      {# EJEMPLO: se reemplaza solo cuando la vista envía "categorias" #}
+      <label class="chip"><input type="radio" name="id_categorias" value="1">Shampoo</label>
+      <label class="chip"><input type="radio" name="id_categorias" value="2">Tratamientos</label>
+      <label class="chip"><input type="radio" name="id_categorias" value="3">Tintes</label>
+      <label class="chip"><input type="radio" name="id_categorias" value="4">Accesorios</label>
+      <label class="chip"><input type="radio" name="id_categorias" value="5">Uñas</label>
+      <label class="chip"><input type="radio" name="id_categorias" value="6">Maquillaje</label>
+      {% endfor %}
+    </div>
+    <label class="chip chip-offer" id="ofertas"><input type="checkbox" name="solo_descuento"{% if request.GET.solo_descuento %} checked{% endif %}><span class="ico ico-tag"></span>En oferta</label>
+    <label class="chip"><input type="checkbox" name="solo_disponibles"{% if request.GET.solo_disponibles or not request.GET %} checked{% endif %}>Disponibles</label>
+    <a href="#" class="btn btn-ghost btn-sm">Limpiar</a>
+  </div>
+</form>
+
+      <p class="muted" id="contador-resultados" style="margin-bottom:18px;">Mostrando 6 de 48 productos</p>
+
+      <div class="product-grid" id="lista-productos">
+{% for producto in productos %}
+{% include 'partials/_producto_card.html' %}
+{% empty %}
+{# EJEMPLO: estas tarjetas de muestra desaparecen cuando la vista envíe "productos". Puedes borrarlas hasta el endfor. #}
+        <article class="product-card">
+          <a href="#" class="product-img"><span class="tag-discount">-20%</span>Imagen del producto</a>
+          <div class="product-info">
+            <span class="product-cat">Tratamientos</span>
+            <a href="#" class="product-name">Keratina reparadora 500 ml</a>
+            <div class="price-row"><span class="price">$ 64.000</span><span class="price-old">$ 80.000</span></div>
+            <span class="iva-note">IVA incluido</span>
+            <button class="btn btn-primary btn-sm" data-id-productos="1">Agregar al carrito</button>
+          </div>
+        </article>
+        <article class="product-card">
+          <a href="#" class="product-img"><span class="tag-discount">-$10.000</span>Imagen del producto</a>
+          <div class="product-info">
+            <span class="product-cat">Shampoo</span>
+            <a href="#" class="product-name">Shampoo matizador violeta</a>
+            <div class="price-row"><span class="price">$ 35.000</span><span class="price-old">$ 45.000</span></div>
+            <span class="iva-note">IVA incluido</span>
+            <button class="btn btn-primary btn-sm" data-id-productos="2">Agregar al carrito</button>
+          </div>
+        </article>
+        <article class="product-card">
+          <a href="#" class="product-img"><span class="tag-discount">-15%</span><span class="tag-stock">Quedan 3</span>Imagen del producto</a>
+          <div class="product-info">
+            <span class="product-cat">Tintes</span>
+            <a href="#" class="product-name">Tinte permanente castaño 5.0</a>
+            <div class="price-row"><span class="price">$ 22.100</span><span class="price-old">$ 26.000</span></div>
+            <span class="iva-note">+ IVA 19%</span>
+            <button class="btn btn-primary btn-sm" data-id-productos="3">Agregar al carrito</button>
+          </div>
+        </article>
+        <article class="product-card">
+          <a href="#" class="product-img">Imagen del producto</a>
+          <div class="product-info">
+            <span class="product-cat">Tratamientos</span>
+            <a href="#" class="product-name">Aceite de argán 100 ml</a>
+            <div class="price-row"><span class="price">$ 48.000</span></div>
+            <span class="iva-note">IVA incluido</span>
+            <button class="btn btn-primary btn-sm" data-id-productos="5">Agregar al carrito</button>
+          </div>
+        </article>
+        <article class="product-card">
+          <a href="#" class="product-img">Imagen del producto</a>
+          <div class="product-info">
+            <span class="product-cat">Maquillaje</span>
+            <a href="#" class="product-name">Paleta de sombras nude</a>
+            <div class="price-row"><span class="price">$ 72.000</span></div>
+            <span class="iva-note">IVA incluido</span>
+            <button class="btn btn-primary btn-sm" data-id-productos="6">Agregar al carrito</button>
+          </div>
+        </article>
+        <article class="product-card">
+          <a href="#" class="product-img"><span class="tag-stock">Agotado</span>Imagen del producto</a>
+          <div class="product-info">
+            <span class="product-cat">Accesorios</span>
+            <a href="#" class="product-name">Secador iónico 2200 W</a>
+            <div class="price-row"><span class="price">$ 189.000</span></div>
+            <span class="iva-note">IVA incluido</span>
+            <button class="btn btn-outline btn-sm" disabled style="opacity:.5;cursor:not-allowed;">Agotado</button>
+          </div>
+        </article>
+      {% endfor %}
+</div>
+
+      <nav class="pagination">
+        <a href="#" class="active">1</a><a href="#">2</a><a href="#">3</a><a href="#">4</a><a href="#">→</a>
+      </nav>
+    </div>
+  </main>
+{% endblock %}

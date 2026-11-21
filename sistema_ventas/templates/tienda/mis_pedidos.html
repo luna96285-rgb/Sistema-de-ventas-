@@ -1,0 +1,105 @@
+{% extends 'tienda/base_tienda.html' %}
+
+{% block title %}Mis pedidos | Bella Studio{% endblock %}
+
+{% block content %}
+<main class="section" style="padding-top:40px;">
+    <div class="container" style="max-width:900px;">
+      <span class="eyebrow">Mi cuenta</span>
+      <h1 style="font-size:2.6rem;margin:6px 0 28px;">Mis pedidos</h1>
+
+      <form id="filtro-estado" method="get" onchange="this.submit()" style="margin-bottom:24px;">
+{# FILTRO por estado del pedido (único). Se usa en "Mis pedidos" y en "Pedidos" del admin. Envuélvelo en un <form method="get">. #}
+<div class="chips" style="flex-wrap:wrap;">
+  <label class="chip"><input type="radio" name="estado" value=""{% if not request.GET.estado %} checked{% endif %}>Todos</label>
+  <label class="chip"><input type="radio" name="estado" value="pendiente"{% if request.GET.estado == 'pendiente' %} checked{% endif %}>Pendientes</label>
+  <label class="chip"><input type="radio" name="estado" value="pagado"{% if request.GET.estado == 'pagado' %} checked{% endif %}>Pagados</label>
+  <label class="chip"><input type="radio" name="estado" value="enviado"{% if request.GET.estado == 'enviado' %} checked{% endif %}>Enviados</label>
+  <label class="chip"><input type="radio" name="estado" value="entregado"{% if request.GET.estado == 'entregado' %} checked{% endif %}>Entregados</label>
+  <label class="chip"><input type="radio" name="estado" value="cancelado"{% if request.GET.estado == 'cancelado' %} checked{% endif %}>Cancelados</label>
+</div>
+      </form>
+
+      <div id="lista-pedidos">
+
+        {# Pedido en camino #}
+        <article class="order-card">
+          <div class="order-head">
+            <div><small>Pedido</small><strong>#1042</strong></div>
+            <div><small>Fecha</small>10 nov 2026</div>
+            <div><small>Total</small><strong>$ 202.360</strong></div>
+            <div><span class="badge badge-enviado">Enviado</span></div>
+          </div>
+          <div class="order-body">
+            <div class="timeline">
+              <div class="tl-step done"><b>✓</b>Pendiente</div>
+              <div class="tl-step done"><b>✓</b>Pagado</div>
+              <div class="tl-step done"><b>✓</b>Enviado</div>
+              <div class="tl-step"><b>4</b>Entregado</div>
+            </div>
+            <table>
+              <tbody>
+                <tr><td><div class="cell-product"><div class="table-thumb"></div>Keratina reparadora 500 ml</div></td><td>× 1</td><td class="text-right">$ 64.000</td></tr>
+                <tr><td><div class="cell-product"><div class="table-thumb"></div>Shampoo matizador violeta</div></td><td>× 2</td><td class="text-right">$ 70.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="order-foot">
+            <div class="muted" style="font-size:.9rem;">Servientrega · Guía <strong style="color:var(--ink);">SV123456789</strong> · Envío a Bucaramanga</div>
+            <div style="display:flex;gap:8px;">
+              <a href="#" class="btn btn-outline btn-sm">Ver factura</a>
+              <button class="btn btn-primary btn-sm" data-accion="rastrear">Rastrear envío</button>
+            </div>
+          </div>
+        </article>
+
+        {# Pedido entregado #}
+        <article class="order-card">
+          <div class="order-head">
+            <div><small>Pedido</small><strong>#1018</strong></div>
+            <div><small>Fecha</small>22 oct 2026</div>
+            <div><small>Total</small><strong>$ 95.000</strong></div>
+            <div><span class="badge badge-entregado">Entregado</span></div>
+          </div>
+          <div class="order-body">
+            <table>
+              <tbody>
+                <tr><td><div class="cell-product"><div class="table-thumb"></div>Aceite de argán 100 ml</div></td><td>× 1</td><td class="text-right">$ 48.000</td></tr>
+                <tr><td><div class="cell-product"><div class="table-thumb"></div>Set de brochas x 12</div></td><td>× 1</td><td class="text-right">$ 59.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="order-foot">
+            <div class="muted" style="font-size:.9rem;">Coordinadora · Guía CO987654321</div>
+            <div style="display:flex;gap:8px;">
+              <a href="#" class="btn btn-outline btn-sm">Ver factura</a>
+              <button class="btn btn-ghost btn-sm" data-accion="repetir">Volver a comprar</button>
+            </div>
+          </div>
+        </article>
+
+        {# Pedido pendiente #}
+        <article class="order-card">
+          <div class="order-head">
+            <div><small>Pedido</small><strong>#1050</strong></div>
+            <div><small>Fecha</small>12 nov 2026</div>
+            <div><small>Total</small><strong>$ 35.000</strong></div>
+            <div><span class="badge badge-pendiente">Pendiente</span></div>
+          </div>
+          <div class="order-body">
+            <table>
+              <tbody>
+                <tr><td><div class="cell-product"><div class="table-thumb"></div>Shampoo matizador violeta</div></td><td>× 1</td><td class="text-right">$ 35.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="order-foot">
+            <div class="muted" style="font-size:.9rem;">Esperando confirmación de pago</div>
+            <button class="btn btn-danger btn-sm" data-accion="cancelar">Cancelar pedido</button>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </main>
+{% endblock %}

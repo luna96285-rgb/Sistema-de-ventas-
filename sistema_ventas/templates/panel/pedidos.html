@@ -1,0 +1,125 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block title %}Pedidos | Admin Bella Studio{% endblock %}
+
+{% block panel_content %}
+    <div class="admin-top">
+      <div><span class="eyebrow">Ventas</span><h1>Pedidos</h1></div>
+    </div>
+
+    <div class="admin-grid">
+      <section class="card">
+        <form id="filtro-pedidos" class="stack" style="gap:14px;margin-bottom:20px;" method="get" onchange="this.submit()">
+          <div class="filter-row">
+            <label class="filter-search" style="max-width:380px;">
+              <span class="ico ico-search"></span>
+              <input type="search" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar por # pedido o cliente">
+            </label>
+            <input class="select-pill" type="date" name="fecha" aria-label="Fecha">
+          </div>
+{# FILTRO por estado del pedido (único). Se usa en "Mis pedidos" y en "Pedidos" del admin. Envuélvelo en un <form method="get">. #}
+<div class="chips" style="flex-wrap:wrap;">
+  <label class="chip"><input type="radio" name="estado" value=""{% if not request.GET.estado %} checked{% endif %}>Todos</label>
+  <label class="chip"><input type="radio" name="estado" value="pendiente"{% if request.GET.estado == 'pendiente' %} checked{% endif %}>Pendientes</label>
+  <label class="chip"><input type="radio" name="estado" value="pagado"{% if request.GET.estado == 'pagado' %} checked{% endif %}>Pagados</label>
+  <label class="chip"><input type="radio" name="estado" value="enviado"{% if request.GET.estado == 'enviado' %} checked{% endif %}>Enviados</label>
+  <label class="chip"><input type="radio" name="estado" value="entregado"{% if request.GET.estado == 'entregado' %} checked{% endif %}>Entregados</label>
+  <label class="chip"><input type="radio" name="estado" value="cancelado"{% if request.GET.estado == 'cancelado' %} checked{% endif %}>Cancelados</label>
+</div>
+        </form>
+
+        <div class="table-wrap">
+          <table id="tabla-pedidos">
+            <thead>
+              <tr><th>#</th><th>Cliente</th><th>Fecha</th><th>Estado</th><th class="text-right">Total</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr data-id-pedidos="1050">
+                <td><strong>#1050</strong></td><td>María Pérez<br><small class="muted">Bucaramanga</small></td><td>12 nov</td>
+                <td><span class="badge badge-pendiente">Pendiente</span></td>
+                <td class="text-right">$ 35.000</td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="ver">Ver</button></td>
+              </tr>
+              <tr data-id-pedidos="1049">
+                <td><strong>#1049</strong></td><td>Laura Gómez<br><small class="muted">Bogotá</small></td><td>12 nov</td>
+                <td><span class="badge badge-pagado">Pagado</span></td>
+                <td class="text-right">$ 148.500</td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="ver">Ver</button></td>
+              </tr>
+              <tr data-id-pedidos="1042">
+                <td><strong>#1042</strong></td><td>Camila Ruiz<br><small class="muted">Medellín</small></td><td>10 nov</td>
+                <td><span class="badge badge-enviado">Enviado</span></td>
+                <td class="text-right">$ 202.360</td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="ver">Ver</button></td>
+              </tr>
+              <tr data-id-pedidos="1018">
+                <td><strong>#1018</strong></td><td>Andrea Silva<br><small class="muted">Cali</small></td><td>22 oct</td>
+                <td><span class="badge badge-entregado">Entregado</span></td>
+                <td class="text-right">$ 95.000</td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="ver">Ver</button></td>
+              </tr>
+              <tr data-id-pedidos="1011">
+                <td><strong>#1011</strong></td><td>Juliana Torres<br><small class="muted">Cartagena</small></td><td>18 oct</td>
+                <td><span class="badge badge-cancelado">Cancelado</span></td>
+                <td class="text-right">$ 72.000</td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="ver">Ver</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <aside class="card" id="detalle-pedido">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3 class="card-title" style="margin:0;">Pedido #1049</h3>
+          <span class="badge badge-pagado">Pagado</span>
+        </div>
+
+        <h4 class="muted mt-3" style="font-family:var(--font-body);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;">Cliente y envío</h4>
+        <p class="mt-1" style="font-size:.92rem;">
+          <strong>Laura Gómez</strong> · 301 555 1234<br>
+          Calle 80 # 20-15, Barrio Chapinero<br>
+          Bogotá, Cundinamarca
+        </p>
+
+        <h4 class="muted mt-3" style="font-family:var(--font-body);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;">Productos</h4>
+        <ul class="meta-list">
+          <li><span>Keratina reparadora × 1</span><span>$ 64.000</span></li>
+          <li><span>Aceite de argán × 2</span><span>$ 96.000</span></li>
+          <li><span>Descuentos</span><span style="color:var(--ok);">− $ 25.500</span></li>
+          <li><span>Envío</span><span>$ 14.000</span></li>
+          <li><strong>Total</strong><strong>$ 148.500</strong></li>
+        </ul>
+
+        <form id="form-actualizar-pedido" method="post">
+{% csrf_token %}
+          <div class="field">
+            <label for="estado-pedido">Estado del pedido</label>
+            <select class="select" id="estado-pedido" name="estado">
+              <option value="pendiente">Pendiente</option>
+              <option value="pagado" selected>Pagado</option>
+              <option value="enviado">Enviado</option>
+              <option value="entregado">Entregado</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="transportadora-pedido">Transportadora</label>
+            <select class="select" id="transportadora-pedido" name="id_transportadoras">
+              <option value="">Sin asignar</option>
+              <option value="1">Servientrega</option>
+              <option value="2" selected>Coordinadora</option>
+              <option value="3">Interrapidísimo</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="guia-pedido">Número de guía</label>
+            <input class="input" id="guia-pedido" name="numero_guia" type="text" placeholder="Ej. SV123456789">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Guardar cambios</button>
+          <a href="#" class="btn btn-outline btn-block mt-1">Ver factura</a>
+        </form>
+      </aside>
+    </div>
+  
+{% endblock %}

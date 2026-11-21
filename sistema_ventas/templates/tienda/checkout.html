@@ -1,0 +1,122 @@
+{% extends 'tienda/base_minimo.html' %}
+
+{% block title %}Finalizar compra | Bella Studio{% endblock %}
+
+{% block header_actions %}
+<a href="#" class="btn btn-ghost btn-sm">← Volver al carrito</a>
+{% endblock %}
+
+{% block content %}
+<main class="section" style="padding-top:40px;">
+    <div class="container">
+      <div class="steps">
+        <div class="step"><b>✓</b> Carrito</div>
+        <div class="step active"><b>2</b> Envío y pago</div>
+        <div class="step"><b>3</b> Confirmación</div>
+      </div>
+
+      <h1 style="font-size:2.6rem;margin-bottom:28px;">Finalizar compra</h1>
+
+      <form id="form-checkout" class="cart-layout" method="post">
+{% csrf_token %}
+        <div class="stack">
+
+          <section class="card">
+            <h3 class="card-title">1. Dirección de envío</h3>
+
+            <label class="option-card">
+              <input type="radio" name="id_direcciones" value="1" checked>
+              <div>
+                <strong>Casa · María Pérez <span class="badge badge-vigente">Principal</span></strong>
+                <small>Cra 15 # 20-35, Apto 301 · Bucaramanga, Santander · Tel. 300 123 4567</small>
+              </div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="id_direcciones" value="2">
+              <div>
+                <strong>Trabajo · María Pérez</strong>
+                <small>Calle 45 # 12-10 · Bogotá, Cundinamarca · Tel. 300 123 4567</small>
+              </div>
+            </label>
+            <label class="option-card" id="opcion-nueva-direccion">
+              <input type="radio" name="id_direcciones" value="nueva">
+              <div><strong>+ Usar una nueva dirección</strong></div>
+            </label>
+
+            <div id="form-nueva-direccion" class="mt-3">
+              <div class="form-row">
+                <div class="field"><label for="nombre_destinatario">Nombre de quien recibe</label><input class="input" id="nombre_destinatario" name="nombre_destinatario" type="text"></div>
+                <div class="field"><label for="telefono">Teléfono</label><input class="input" id="telefono" name="telefono" type="tel"></div>
+              </div>
+              <div class="form-row">
+                <div class="field"><label for="departamento">Departamento</label>
+                  <select class="select" id="departamento" name="departamento"><option value="">Selecciona...</option><option>Santander</option><option>Cundinamarca</option><option>Antioquia</option><option>Valle del Cauca</option></select>
+                </div>
+                <div class="field"><label for="ciudad">Ciudad</label>
+                  <select class="select" id="ciudad" name="ciudad"><option value="">Selecciona...</option></select>
+                </div>
+              </div>
+              <div class="field"><label for="direccion">Dirección</label><input class="input" id="direccion" name="direccion" type="text" placeholder="Calle, carrera, número, apartamento"></div>
+              <div class="field"><label for="indicaciones">Indicaciones adicionales</label><textarea class="textarea" id="indicaciones" name="indicaciones" style="min-height:80px;" placeholder="Torre, portería, punto de referencia..."></textarea></div>
+              <label class="switch"><input type="checkbox" name="es_principal"> Guardar como dirección principal</label>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3 class="card-title">2. Transportadora</h3>
+            <label class="option-card">
+              <input type="radio" name="id_transportadoras" value="1" checked>
+              <div><strong>Servientrega</strong><small>Entrega en 3 a 5 días hábiles</small></div>
+              <span class="opt-price">$ 12.000</span>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="id_transportadoras" value="2">
+              <div><strong>Coordinadora</strong><small>Entrega en 2 a 4 días hábiles</small></div>
+              <span class="opt-price">$ 14.000</span>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="id_transportadoras" value="3">
+              <div><strong>Interrapidísimo</strong><small>Entrega en 3 a 6 días hábiles</small></div>
+              <span class="opt-price">$ 11.000</span>
+            </label>
+          </section>
+
+          <section class="card">
+            <h3 class="card-title">3. Método de pago</h3>
+            <label class="option-card">
+              <input type="radio" name="metodo_pago" value="tarjeta" checked>
+              <div><strong>Tarjeta de crédito o débito</strong><small>Pago seguro en línea</small></div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="metodo_pago" value="pse">
+              <div><strong>PSE</strong><small>Débito desde tu cuenta bancaria</small></div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="metodo_pago" value="transferencia">
+              <div><strong>Transferencia o Nequi</strong><small>Envía el comprobante después de pagar</small></div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="metodo_pago" value="contraentrega">
+              <div><strong>Contraentrega</strong><small>Pagas al recibir el pedido</small></div>
+            </label>
+          </section>
+        </div>
+
+        <aside class="card summary">
+          <h3 class="card-title" style="margin-bottom:12px;">Tu pedido</h3>
+          <div class="summary-row"><span>Keratina reparadora × 1</span><span>$ 64.000</span></div>
+          <div class="summary-row"><span>Shampoo matizador × 2</span><span>$ 70.000</span></div>
+          <div class="summary-row"><span>Aceite de argán × 1</span><span>$ 48.000</span></div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:10px 0;">
+          <div class="summary-row"><span>Subtotal</span><span id="resumen-subtotal">$ 218.000</span></div>
+          <div class="summary-row discount"><span>Descuentos</span><span id="resumen-descuento">− $ 36.000</span></div>
+          <div class="summary-row"><span>IVA</span><span id="resumen-iva">$ 0</span></div>
+          <div class="summary-row"><span>Envío</span><span id="resumen-envio">$ 12.000</span></div>
+          <div class="summary-row total"><span>Total</span><span id="resumen-total">$ 194.000</span></div>
+          <button type="submit" class="btn btn-primary btn-block mt-2">Confirmar pedido</button>
+          <p class="hint text-center mt-2">Al confirmar se genera tu factura y recibirás el número de guía cuando despachemos.</p>
+        </aside>
+      </form>
+    </div>
+  </main>
+{% endblock %}

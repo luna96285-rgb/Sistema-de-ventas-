@@ -1,0 +1,133 @@
+{% extends 'panel/base_panel.html' %}
+
+{% block title %}Descuentos | Admin Bella Studio{% endblock %}
+
+{% block panel_content %}
+    <div class="admin-top">
+      <div><span class="eyebrow">Promociones</span><h1>Descuentos</h1></div>
+    </div>
+
+    <div class="stack">
+
+      <section class="card">
+        <h3 class="card-title">Nuevo descuento</h3>
+        <form id="form-descuento" method="post">
+{% csrf_token %}
+          <input type="hidden" name="id_descuentos" value="">
+
+          <div class="discount-form">
+            <div class="field span-2">
+              <label for="d-producto">Producto</label>
+              <select class="select" id="d-producto" name="id_productos" required>
+                <option value="">Selecciona un producto...</option>
+                <option value="1">Keratina reparadora 500 ml</option>
+                <option value="2">Shampoo matizador violeta</option>
+                <option value="3">Tinte permanente castaño 5.0</option>
+                <option value="5">Aceite de argán 100 ml</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Tipo de descuento</label>
+              <div class="chips-wrap">
+                <label class="chip"><input type="radio" name="tipo" value="porcentaje" checked>%</label>
+                <label class="chip"><input type="radio" name="tipo" value="valor">$ fijo</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="d-valor">Valor</label>
+              <input class="input" id="d-valor" name="valor" type="number" min="0" step="0.01" placeholder="Ej. 20" required>
+            </div>
+
+            <div class="field">
+              <label for="d-inicio">Desde</label>
+              <input class="input" id="d-inicio" name="fecha_inicio" type="date" required>
+            </div>
+
+            <div class="field">
+              <label for="d-fin">Hasta</label>
+              <input class="input" id="d-fin" name="fecha_fin" type="date" required>
+            </div>
+
+            <div class="field span-2">
+              <label>Así se verá el precio</label>
+              <div class="price-helper">
+                <div class="price-row" style="padding:0;">
+                  <strong id="descuento-preview-final">$ 64.000</strong>
+                  <span class="price-old" id="descuento-preview-original">$ 80.000</span>
+                  <span class="badge badge-vigente">-20%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="discount-actions">
+            <label class="toggle-card">
+              <div><strong>Descuento activo</strong><small>Se aplica dentro de las fechas</small></div>
+              <span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked><i></i></span>
+            </label>
+            <div class="btns">
+              <button type="reset" class="btn btn-ghost">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Guardar descuento</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <form id="filtro-descuentos" class="stack" style="gap:14px;margin-bottom:20px;" method="get" onchange="this.submit()">
+          <label class="filter-search" style="max-width:380px;">
+            <span class="ico ico-search"></span>
+            <input type="search" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar por producto">
+          </label>
+          <div class="chips" style="flex-wrap:wrap;">
+            <label class="chip"><input type="radio" name="estado" value=""{% if not request.GET.estado %} checked{% endif %}>Todos</label>
+            <label class="chip"><input type="radio" name="estado" value="vigente"{% if request.GET.estado == 'vigente' %} checked{% endif %}>Vigentes</label>
+            <label class="chip"><input type="radio" name="estado" value="programado"{% if request.GET.estado == 'programado' %} checked{% endif %}>Programados</label>
+            <label class="chip"><input type="radio" name="estado" value="vencido"{% if request.GET.estado == 'vencido' %} checked{% endif %}>Vencidos</label>
+          </div>
+        </form>
+
+        <div class="table-wrap">
+          <table id="tabla-descuentos">
+            <thead>
+              <tr><th>Producto</th><th>Tipo</th><th class="text-right">Valor</th><th>Vigencia</th><th>Estado</th><th>Activo</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr data-id-descuentos="1">
+                <td><div class="cell-product"><div class="table-thumb"></div><strong>Keratina reparadora 500 ml</strong></div></td>
+                <td>Porcentaje</td><td class="text-right">20%</td><td>01 nov – 30 nov</td>
+                <td><span class="badge badge-vigente">Vigente</span></td>
+                <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked aria-label="Activo"><i></i></span></td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="editar"><span class="ico ico-edit"></span> Editar</button></td>
+              </tr>
+              <tr data-id-descuentos="2">
+                <td><div class="cell-product"><div class="table-thumb"></div><strong>Shampoo matizador violeta</strong></div></td>
+                <td>Valor fijo</td><td class="text-right">$ 10.000</td><td>05 nov – 20 nov</td>
+                <td><span class="badge badge-vigente">Vigente</span></td>
+                <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked aria-label="Activo"><i></i></span></td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="editar"><span class="ico ico-edit"></span> Editar</button></td>
+              </tr>
+              <tr data-id-descuentos="3">
+                <td><div class="cell-product"><div class="table-thumb"></div><strong>Plancha profesional cerámica</strong></div></td>
+                <td>Porcentaje</td><td class="text-right">10%</td><td>25 nov – 02 dic</td>
+                <td><span class="badge badge-pendiente">Programado</span></td>
+                <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked aria-label="Activo"><i></i></span></td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="editar"><span class="ico ico-edit"></span> Editar</button></td>
+              </tr>
+              <tr data-id-descuentos="4">
+                <td><div class="cell-product"><div class="table-thumb"></div><strong>Aceite de argán 100 ml</strong></div></td>
+                <td>Porcentaje</td><td class="text-right">15%</td><td>01 oct – 15 oct</td>
+                <td><span class="badge badge-inactivo">Vencido</span></td>
+                <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" aria-label="Activo"><i></i></span></td>
+                <td class="actions"><button class="btn btn-outline btn-sm" data-accion="editar"><span class="ico ico-edit"></span> Editar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+{% endblock %}

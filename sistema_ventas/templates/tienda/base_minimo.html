@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{# Base MÍNIMA: solo logo + un botón arriba, sin menú ni pie. La usan: checkout, confirmación (y, por herencia, login y registro). #}
+
+{% block body %}
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#" class="logo">Bella<span>Studio</span></a>
+      <div class="nav-actions">
+        {% block header_actions %}
+        <a href="#" class="btn btn-ghost btn-sm">← Volver a la tienda</a>
+        {% endblock %}
+      </div>
+    </div>
+  </header>
+
+  <div class="container">{# Mensajes de Django: messages.success(request, "..."), messages.error(...), etc. #}
+</div>
+
+  {% block content %}{% endblock %}
+{% endblock %}

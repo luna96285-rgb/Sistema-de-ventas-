@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{# Base de la TIENDA: franja superior + menú + contenido + pie. La usan: index, catálogo, producto, carrito, mis pedidos y factura. #}
+
+{% block body %}
+  {% block topbar %}
+  <div class="topbar">Envíos a todo el país con las mejores transportadoras · Descuentos todas las semanas</div>
+  {% endblock %}
+
+{# MENÚ de la tienda (único). Marca como activo el enlace de la página actual usando el nombre de la URL. #}
+{% with u=request.resolver_match.url_name %}
+<header class="site-header">
+  <div class="container nav">
+    <a href="#" class="logo">Bella<span>Studio</span></a>
+
+    <nav class="nav-links">
+      <a href="#"{% if u == 'inicio' %} class="active"{% endif %}>Inicio</a>
+      <a href="#"{% if u == 'tienda' or u == 'producto' %} class="active"{% endif %}>Tienda</a>
+      <a href="#ofertas">Ofertas</a>
+      <a href="#"{% if u == 'mis_pedidos' or u == 'factura' %} class="active"{% endif %}>Mis pedidos</a>
+    </nav>
+
+    <div class="nav-actions">
+      {% if user.is_authenticated %}
+        {# user.rol: campo de tu modelo de usuarios (admin / cliente). Ajusta el nombre si lo llamas distinto. #}
+        {% if user.rol == 'admin' %}
+        <a href="#" class="btn btn-ghost btn-sm btn-text">Panel admin</a>
+        {% endif %}
+        <form action="#" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-dark btn-sm btn-text">Salir</button>
+        </form>
+        <a href="#" class="icon-btn" aria-label="Mi cuenta"><span class="ico ico-user"></span></a>
+      {% else %}
+        <a href="#" class="btn btn-ghost btn-sm btn-text">Ingresar</a>
+        <a href="#" class="btn btn-dark btn-sm btn-text">Crear cuenta</a>
+        <a href="#" class="icon-btn" aria-label="Mi cuenta"><span class="ico ico-user"></span></a>
+      {% endif %}
+      <a href="#" class="icon-btn" aria-label="Carrito"><span class="ico ico-bag"></span><span class="badge-count" id="carrito-contador">{{ carrito_contador|default:0 }}</span></a>
+    </div>
+  </div>
+</header>
+{% endwith %}
+
+  <div class="container">{# Mensajes de Django: messages.success(request, "..."), messages.error(...), etc. #}
+{% if messages %}
+<div class="messages">
+  {% for message in messages %}
+  <div class="message message-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}</div>
+
+  {% block content %}{% endblock %}
+
+{# PIE de página de la tienda (único). #}
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="#" class="logo" style="color:#fff;">Bella<span>Studio</span></a>
+        <p class="mt-1" style="font-size:.92rem;">Productos de belleza y cuidado capilar para profesionales y para ti.</p>
+      </div>
+      <div><h4>Tienda</h4><ul><li><a href="#">Catálogo</a></li><li><a href="#ofertas">Ofertas</a></li><li><a href="#">Carrito</a></li></ul></div>
+      <div><h4>Mi cuenta</h4><ul><li><a href="#">Ingresar</a></li><li><a href="#">Crear cuenta</a></li><li><a href="#">Mis pedidos</a></li></ul></div>
+      <div><h4>Contacto</h4><ul><li>WhatsApp: 300 000 0000</li><li>correo@bellastudio.com</li><li>Santander, Colombia</li></ul></div>
+    </div>
+    <div class="footer-bottom">© 2026 Bella Studio. Todos los derechos reservados.</div>
+  </div>
+</footer>
+{% endblock %}
