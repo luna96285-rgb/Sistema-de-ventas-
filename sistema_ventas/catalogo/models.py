@@ -28,11 +28,12 @@ class Productos(models.Model):
 
 class Descuentos(models.Model):
     id_descuento = models.AutoField(primary_key=True)
-    # PENDIENTE: verificar en MySQL si id_producto_fk referencia productos.
-    # Se conserva 'self' como en los modelos originales para no asumir cambios.
     id_producto_fk = models.ForeignKey(
-        'self', models.DO_NOTHING,
-        db_column='id_producto_fk', blank=True, null=True,
+        Productos,
+        models.DO_NOTHING,
+        db_column='id_producto_fk',
+        blank=True,
+        null=True,
     )
     porcentaje = models.DecimalField(max_digits=12, decimal_places=2)
     fecha_inicio = models.DateField()
