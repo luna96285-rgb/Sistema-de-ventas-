@@ -87,6 +87,11 @@ DATABASES = {
         'PASSWORD': '', # Tu contraseña, si tiene
         'HOST': 'localhost',
         'PORT': '3306',
+
+        # Activar el modo estricto para Django: Es una configuración de MariaDB que ayuda a evitar que se almacenen datos incorrectos.
+        'OPTIONS': {
+            'init_command': "SET SESSION sql_mode = CONCAT_WS(',', NULLIF(@@SESSION.sql_mode, ''), 'STRICT_TRANS_TABLES')",
+        }
     }
 }
 
