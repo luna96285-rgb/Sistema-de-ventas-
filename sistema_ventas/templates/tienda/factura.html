@@ -1,0 +1,73 @@
+{% extends 'tienda/base_tienda.html' %}
+
+{% block title %}Factura | Bella Studio{% endblock %}
+
+{% block content %}
+<main>
+    <article class="invoice" id="factura">
+      <header class="invoice-head">
+        <div>
+          <a href="#" class="logo">Bella<span>Studio</span></a>
+          <p class="muted mt-1" style="font-size:.88rem;">NIT 900.000.000-0<br>Calle 00 # 00-00, Santander<br>correo@bellastudio.com · 300 000 0000</p>
+        </div>
+        <div class="invoice-num">
+          <small class="muted">FACTURA DE VENTA</small>
+          <strong id="factura-numero">FV-000123</strong>
+          <span class="muted" style="font-size:.88rem;">Emitida: <span id="factura-fecha">12 nov 2026</span></span><br>
+          <span class="muted" style="font-size:.88rem;">Pedido: #<span id="factura-pedido">1042</span></span>
+        </div>
+      </header>
+
+      <section class="invoice-parties">
+        <div>
+          <h4>Cliente</h4>
+          <p id="factura-cliente"><strong>María Pérez</strong><br>maria@correo.com<br>300 123 4567</p>
+        </div>
+        <div>
+          <h4>Enviar a</h4>
+          <p id="factura-direccion">María Pérez<br>Cra 15 # 20-35, Apto 301<br>Bucaramanga, Santander</p>
+        </div>
+        <div>
+          <h4>Envío y pago</h4>
+          <p id="factura-envio">Servientrega<br>Guía: SV123456789<br>Pago: Tarjeta · <span class="badge badge-pagado">Pagado</span></p>
+        </div>
+      </section>
+
+      {# detalle_pedido #}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th class="text-right">Cant.</th>
+              <th class="text-right">Precio unit.</th>
+              <th class="text-right">Desc. unit.</th>
+              <th class="text-right">IVA</th>
+              <th class="text-right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody id="factura-detalle">
+            <tr><td>Keratina reparadora 500 ml</td><td class="text-right">1</td><td class="text-right">$ 80.000</td><td class="text-right">$ 16.000</td><td class="text-right">0%</td><td class="text-right">$ 64.000</td></tr>
+            <tr><td>Shampoo matizador violeta</td><td class="text-right">2</td><td class="text-right">$ 45.000</td><td class="text-right">$ 10.000</td><td class="text-right">0%</td><td class="text-right">$ 70.000</td></tr>
+            <tr><td>Tinte permanente castaño 5.0</td><td class="text-right">1</td><td class="text-right">$ 26.000</td><td class="text-right">$ 3.900</td><td class="text-right">19%</td><td class="text-right">$ 22.100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="invoice-totals">
+        <div class="summary-row"><span>Subtotal</span><span id="factura-subtotal">$ 196.000</span></div>
+        <div class="summary-row discount"><span>Descuentos</span><span id="factura-descuento">− $ 39.900</span></div>
+        <div class="summary-row"><span>IVA</span><span id="factura-iva">$ 4.199</span></div>
+        <div class="summary-row"><span>Envío</span><span id="factura-costo-envio">$ 12.000</span></div>
+        <div class="summary-row total"><span>Total</span><span id="factura-total">$ 172.299</span></div>
+      </div>
+
+      <p class="invoice-note">Gracias por tu compra en Bella Studio. Conserva esta factura como soporte de tu pedido.</p>
+    </article>
+
+    <div class="invoice-actions">
+      <button class="btn btn-dark" data-accion="imprimir" onclick="window.print()">Imprimir</button>
+      <button class="btn btn-outline" data-accion="descargar-pdf">Descargar PDF</button>
+    </div>
+  </main>
+{% endblock %}

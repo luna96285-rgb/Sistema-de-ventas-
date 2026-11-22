@@ -1,0 +1,73 @@
+{% extends 'panel/base_panel.html' %}
+{% load static %}
+
+{% block title %}Productos | Admin Bella Studio{% endblock %}
+
+{% block panel_content %}
+    <div class="admin-top">
+      <div><span class="eyebrow">Catálogo</span><h1>Productos</h1></div>
+      <a href="#" class="btn btn-primary"><span class="ico ico-plus"></span> Agregar producto</a>
+    </div>
+
+    <section class="card">
+      {# Filtros rápidos #}
+      <form id="filtro-productos" class="stack" style="gap:14px;margin-bottom:20px;" method="get">
+        <div class="filter-row">
+          <label class="filter-search" style="max-width:420px;">
+            <span class="ico ico-search"></span>
+            <input type="search" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar producto...">
+          </label>
+          <select class="select-pill" name="id_categorias" aria-label="Categoría">
+            <option value="">Todas las categorías</option>
+            <option value="1">Shampoo</option>
+            <option value="2">Tratamientos</option>
+            <option value="3">Tintes</option>
+            <option value="4">Accesorios</option>
+          </select>
+        </div>
+        <div class="chips" style="flex-wrap:wrap;">
+          <label class="chip"><input type="radio" name="estado" value=""{% if not request.GET.estado %} checked{% endif %}>Todos</label>
+          <label class="chip"><input type="radio" name="estado" value="activos"{% if request.GET.estado == 'activos' %} checked{% endif %}>Visibles</label>
+          <label class="chip"><input type="radio" name="estado" value="ocultos"{% if request.GET.estado == 'ocultos' %} checked{% endif %}>Ocultos</label>
+          <label class="chip"><input type="radio" name="estado" value="stock_bajo"{% if request.GET.estado == 'stock_bajo' %} checked{% endif %}>Stock bajo</label>
+        </div>
+      </form>
+
+      <div class="table-wrap">
+        <table id="tabla-productos" data-url-editar="#">
+          <thead>
+            <tr><th>Producto</th><th>Categoría</th><th class="text-right">Precio</th><th>IVA</th><th class="text-right">Stock</th><th>Visible</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr data-id-productos="1">
+              <td><div class="cell-product"><div class="table-thumb"></div><div><strong>Keratina reparadora 500 ml</strong><br><span class="badge badge-vigente">Oferta -20%</span></div></div></td>
+              <td>Tratamientos</td><td class="text-right">$ 80.000</td><td>0%</td><td class="text-right">24</td>
+              <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked aria-label="Visible"><i></i></span></td>
+              <td class="actions"><a href="#" class="btn btn-outline btn-sm"><span class="ico ico-edit"></span> Editar</a></td>
+            </tr>
+            <tr data-id-productos="2">
+              <td><div class="cell-product"><div class="table-thumb"></div><div><strong>Shampoo matizador violeta</strong><br><span class="badge badge-vigente">Oferta -$10.000</span></div></div></td>
+              <td>Shampoo</td><td class="text-right">$ 45.000</td><td>0%</td><td class="text-right">40</td>
+              <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked aria-label="Visible"><i></i></span></td>
+              <td class="actions"><a href="#" class="btn btn-outline btn-sm"><span class="ico ico-edit"></span> Editar</a></td>
+            </tr>
+            <tr data-id-productos="3">
+              <td><div class="cell-product"><div class="table-thumb"></div><div><strong>Tinte permanente castaño 5.0</strong></div></div></td>
+              <td>Tintes</td><td class="text-right">$ 26.000</td><td>19%</td><td class="text-right" style="color:var(--danger);font-weight:600;">3</td>
+              <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked aria-label="Visible"><i></i></span></td>
+              <td class="actions"><a href="#" class="btn btn-outline btn-sm"><span class="ico ico-edit"></span> Editar</a></td>
+            </tr>
+            <tr data-id-productos="9">
+              <td><div class="cell-product"><div class="table-thumb"></div><div><strong>Secador iónico 2200 W</strong></div></div></td>
+              <td>Accesorios</td><td class="text-right">$ 189.000</td><td>19%</td><td class="text-right" style="color:var(--danger);font-weight:600;">0</td>
+              <td><span class="toggle"><input type="checkbox" class="toggle-control" name="activo" aria-label="Visible"><i></i></span></td>
+              <td class="actions"><a href="#" class="btn btn-outline btn-sm"><span class="ico ico-edit"></span> Editar</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/admin_productos.js' %}"></script>{% endblock %}

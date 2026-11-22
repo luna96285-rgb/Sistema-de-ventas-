@@ -1,0 +1,185 @@
+{% extends 'panel/base_panel.html' %}
+{% load static %}
+
+{% block title %}Nuevo producto | Admin Bella Studio{% endblock %}
+
+{% block panel_content %}
+    <div class="breadcrumb"><a href="#">Productos</a> / <span id="titulo-accion">Nuevo producto</span></div>
+    <div class="admin-top">
+      <div>
+        <span class="eyebrow">Catálogo</span>
+        <h1>Agregar producto</h1>
+        <p class="muted">Completa los 4 pasos. Mira a la derecha cómo lo verá el cliente.</p>
+      </div>
+    </div>
+
+    {# Tabla productos (+ descuentos opcional). Si la URL trae ?id=, el JS rellena el formulario para editar #}
+    <form id="form-producto" enctype="multipart/form-data" method="post" data-url-lista="#">
+{% csrf_token %}
+      <input type="hidden" name="id_productos" value="">
+
+      <div class="form-layout">
+
+        <div>
+          {# 1. Información #}
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="num">1</span>
+              <div><h3>Información del producto</h3><small>Lo primero que verá el cliente</small></div>
+            </div>
+            <div class="field">
+              <label for="p-nombre">Nombre del producto</label>
+              <input class="input" id="p-nombre" name="nombre" type="text" placeholder="Ej. Keratina reparadora 500 ml" required>
+            </div>
+            <div class="field">
+              <label for="p-categoria">Categoría</label>
+              <select class="select" id="p-categoria" name="id_categorias" required>
+                <option value="">Selecciona una categoría...</option>
+                <option value="1">Shampoo</option>
+                <option value="2">Tratamientos</option>
+                <option value="3">Tintes</option>
+                <option value="4">Accesorios</option>
+                <option value="5">Uñas</option>
+                <option value="6">Maquillaje</option>
+              </select>
+              <span class="hint">¿No está? <a href="#" style="color:var(--rose-dark);">Crea una categoría nueva</a></span>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="p-descripcion">Descripción</label>
+              <textarea class="textarea" id="p-descripcion" name="descripcion" placeholder="Para qué sirve, modo de uso, contenido..."></textarea>
+            </div>
+          </section>
+
+          {# 2. Imagen #}
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="num">2</span>
+              <div><h3>Imagen</h3><small>Una foto clara vende más</small></div>
+            </div>
+            <label class="upload" id="zona-imagen">
+              <img id="vista-imagen" alt="Vista previa de la imagen">
+              <div>
+                <span class="ico ico-image"></span>
+                <strong>Haz clic o arrastra una imagen aquí</strong>
+                <small>JPG o PNG · máx. 2 MB · formato cuadrado recomendado</small>
+              </div>
+              <input id="p-imagen" name="imagen" type="file" accept="image/*">
+            </label>
+          </section>
+
+          {# 3. Precio e impuesto #}
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="num">3</span>
+              <div><h3>Precio e IVA</h3><small>El sistema calcula el precio final por ti</small></div>
+            </div>
+            <div class="field">
+              <label for="p-precio">Precio base (antes de IVA)</label>
+              <div class="input-group"><span>$</span><input id="p-precio" name="precio" type="number" min="0" step="100" placeholder="0" required><span>COP</span></div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>IVA aplicado</label>
+              <div class="chips-wrap" id="grupo-iva">
+                <label class="chip"><input type="radio" name="iva_porcentaje" value="0" checked>0% · Excluido</label>
+                <label class="chip"><input type="radio" name="iva_porcentaje" value="5">5%</label>
+                <label class="chip"><input type="radio" name="iva_porcentaje" value="19">19%</label>
+              </div>
+            </div>
+            <div class="price-helper">
+              <div><small>Precio base</small><strong id="calculo-base">$ 0</strong></div>
+              <div><small>IVA</small><strong id="calculo-iva">$ 0</strong></div>
+              <div><small>Precio al público</small><strong id="calculo-final">$ 0</strong></div>
+            </div>
+          </section>
+
+          {# 4. Inventario y oferta #}
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="num">4</span>
+              <div><h3>Inventario y oferta</h3><small>Cuánto tienes y si quieres rebajarlo</small></div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="p-stock">Unidades disponibles</label>
+                <div class="input-group"><input id="p-stock" name="stock" type="number" min="0" placeholder="0" required><span>unid.</span></div>
+              </div>
+              <div class="field">
+                <label for="p-peso">Peso por unidad</label>
+                <div class="input-group"><input id="p-peso" name="peso_kg" type="number" min="0" step="0.01" placeholder="0.00"><span>kg</span></div>
+                <span class="hint">Sirve para calcular el envío</span>
+              </div>
+            </div>
+
+            {# Descuento opcional: se guarda en la tabla descuentos con id_productos del nuevo producto #}
+            <div class="collapsible" style="border:1px solid var(--line);border-radius:12px;padding:18px 20px;">
+              <label class="toggle-card">
+                <div><strong>Poner este producto en oferta</strong><small>Opcional · puedes hacerlo después en Descuentos</small></div>
+                <span class="toggle"><input type="checkbox" class="toggle-control" name="crear_descuento"><i></i></span>
+              </label>
+              <div class="collapsible-body">
+                <div class="form-row">
+                  <div class="field">
+                    <label for="d-tipo">Tipo de descuento</label>
+                    <select class="select" id="d-tipo" name="tipo">
+                      <option value="porcentaje">Porcentaje (%)</option>
+                      <option value="valor">Valor fijo ($)</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="d-valor">Valor</label>
+                    <input class="input" id="d-valor" name="valor" type="number" min="0" step="0.01" placeholder="Ej. 20">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="field" style="margin-bottom:0;">
+                    <label for="d-inicio">Desde</label>
+                    <input class="input" id="d-inicio" name="fecha_inicio" type="date">
+                  </div>
+                  <div class="field" style="margin-bottom:0;">
+                    <label for="d-fin">Hasta</label>
+                    <input class="input" id="d-fin" name="fecha_fin" type="date">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {# Columna derecha: vista previa y acciones #}
+        <aside class="side-sticky">
+          <div>
+            <span class="preview-title">Así lo verá el cliente</span>
+            <article class="product-card">
+              <div class="product-img" id="vista-tarjeta-imagen">
+                <span class="tag-discount" id="vista-etiqueta" style="display:none;">-20%</span>
+                <span id="vista-sin-imagen">Imagen del producto</span>
+              </div>
+              <div class="product-info">
+                <span class="product-cat" id="vista-categoria">Categoría</span>
+                <span class="product-name" id="vista-nombre">Nombre del producto</span>
+                <div class="price-row"><span class="price" id="vista-precio">$ 0</span><span class="price-old" id="vista-precio-anterior" style="display:none;"></span></div>
+                <span class="iva-note" id="vista-iva">IVA incluido</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="card" style="padding:20px;">
+            <label class="toggle-card">
+              <div><strong>Visible en la tienda</strong><small>Si lo apagas, queda oculto</small></div>
+              <span class="toggle"><input type="checkbox" class="toggle-control" name="activo" checked><i></i></span>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-block">Guardar producto</button>
+            <button type="submit" class="btn btn-outline btn-block" name="agregar_otro" value="1">Guardar y agregar otro</button>
+            <a href="#" class="btn btn-ghost btn-block">Cancelar</a>
+          </div>
+        </aside>
+
+      </div>
+    </form>
+  
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/admin_producto_form.js' %}"></script>{% endblock %}

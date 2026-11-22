@@ -1,0 +1,54 @@
+{% extends 'cuentas/base_auth.html' %}
+{% load static %}
+
+{% block title %}Ingresar | Bella Studio{% endblock %}
+
+{% block auth_visual %}
+    <section class="auth-visual">
+
+      {% include "partials/mensajes.html" %}
+
+      <span class="eyebrow" style="color:#fff;opacity:.85;">Bella Studio</span>
+      <h2>Tu belleza, a un clic</h2>
+      <p>Ingresa para ver tus pedidos, descargar tus facturas y comprar más rápido.</p>
+    </section>
+{% endblock %}
+
+{% block auth_panel %}
+    <section class="auth-panel">
+      <div class="auth-box">
+        <span class="eyebrow">Bienvenida de vuelta</span>
+        <h1>Ingresar</h1>
+        <p class="muted" style="margin-bottom:28px;">Usa tu correo y contraseña.</p>
+
+        <form id="form-login" method="POST">
+{% csrf_token %}
+          <div class="field">
+            <label for="login-correo">Correo</label>
+            {{formularioI.correo}}
+          </div>
+
+          <div class="field">
+            <label for="login-password">Contraseña</label>
+            <div class="password-wrap">
+              {{formularioI.password}}
+              <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                <span class="ico ico-eye"></span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:.88rem;">
+            <label class="switch"><input type="checkbox" name="recordarme"> Recordarme</label>
+            <a href="#" style="color:var(--rose-dark);">¿Olvidaste tu contraseña?</a>
+          </div>
+          <p class="hint" id="login-error" style="color:var(--danger);display:none;margin-bottom:12px;">Correo o contraseña incorrectos.</p>
+          <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+        </form>
+
+        <p class="auth-alt">¿Aún no tienes cuenta? <a href="{% url "registro-usuarios" %}">Créala aquí</a></p>
+      </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/registro/ojo-password.js' %}"></script>{% endblock %}

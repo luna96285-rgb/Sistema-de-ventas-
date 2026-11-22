@@ -1,0 +1,11 @@
+{% extends 'tienda/base_minimo.html' %}
+{# Base de LOGIN y REGISTRO: pantalla dividida (imagen a la izquierda, formulario a la derecha). #}
+
+{% block content %}
+
+  <main class="auth-split">
+    {% block auth_visual %}{% endblock %}
+    {% block auth_panel %}{% endblock %}
+  </main>
+  
+{% endblock %}
