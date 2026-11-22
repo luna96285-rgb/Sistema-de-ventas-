@@ -13,8 +13,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR.parent / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -83,15 +86,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'peluqueria_paris',
-        'USER': 'root',
-        'PASSWORD': '', # Tu contraseña, si tiene
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'USER': 'bella_django',
+        'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
+        'HOST': '127.0.0.1',
+        'PORT': '3307',
 
-        # Activar el modo estricto para Django: Es una configuración de MariaDB que ayuda a evitar que se almacenen datos incorrectos.
         'OPTIONS': {
             'init_command': "SET SESSION sql_mode = CONCAT_WS(',', NULLIF(@@SESSION.sql_mode, ''), 'STRICT_TRANS_TABLES')",
-        }
+        },
     }
 }
 
